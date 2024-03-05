@@ -5,6 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { UserModule } from './user/user.module';
+import { User } from './user/entities/user.entity';
 
 @Module({
   imports: [
@@ -24,10 +25,10 @@ import { UserModule } from './user/user.module';
         database: ConfigService.get('DB_DATABASE'),
         synchronize: false,
         migrationsRun: true,
-        migrations: [''],
-        cli: {},
+        migrations: ['src/migrations/*.ts'],
+        cli: { migrationsDir: 'src/migrations' },
         charset: 'utf8mb4',
-        entities: [],
+        entities: [User],
       }),
       inject: [ConfigService],
     }),
