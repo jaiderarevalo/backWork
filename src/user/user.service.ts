@@ -31,4 +31,29 @@ export class UserService {
       );
     }
   }
+  async findOne(id: string): Promise<User> {
+    return await this.userRepository.findOneBy({ id });
+  }
+  async checkPassword(users: User, password: string): Promise<boolean> {
+    try {
+      const res = bcrypt.compareSync(password, users.password);
+      return res;
+    } catch (error) {}
+  }
+
+  async validateUser(email: string, password: string): Promise<User | null> {
+    try {
+      const user = await this.userRepository.findOneBy({ email });
+      if (!user) {
+        return null;
+      }
+      const isPasswordValid = await this.checkPassword(user, password);
+      if (!isPasswordValid) {
+        throw new HttpException(
+          'Email o Contraseña incorrecta',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+    } catch (error) {}
+  }
 }
