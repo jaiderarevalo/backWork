@@ -54,6 +54,12 @@ export class UserService {
           HttpStatus.BAD_REQUEST,
         );
       }
-    } catch (error) {}
+      return user;
+    } catch (error) {
+      throw new HttpException(
+        `${error.message}`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 }
